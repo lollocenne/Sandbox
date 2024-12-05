@@ -52,15 +52,14 @@ class Grid:
                         grid[y][x] = self.elements["waterLeft"]
                     else:
                         grid[y][x], grid[y][x+1] = grid[y][x+1], -1     # set it to -1 to avoid moving it
-                        continue
     
     def __str__(self):
-        string = ""
+        grid = ""
         for row in self.grid:
             for cell in row:
-                string += str(cell)
-            string += "\n"
-        return string
+                grid += str(cell)
+            grid += "\n"
+        return grid
 
 
 if __name__ == "__main__":
