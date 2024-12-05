@@ -11,14 +11,22 @@ THIS ORDER IS IMPORTANT: the top one is heavier then the one below
 
 class Grid:
     def __init__(self):
-        listElement: tuple[str] = ("stone", "sand", "waterLeft", "waterRight", "air")
-        self.elements: dict[str, int] = {listElement[num] : num for num in range(len(listElement))}
+        LIST_ELEMENTS: tuple[str] = ("stone", "sand", "waterLeft", "waterRight", "air")
+        self.elements: dict[str, int] = {LIST_ELEMENTS[num] : num for num in range(len(LIST_ELEMENTS))}
         
-        PIXEL_SIZE: int = 10
+        self.PIXEL_SIZE: int = 10
         SCREEN_SIZE: tuple[int, int] = (60, 30)   # replace with the screen size
         
-        self.GRID_SIZE: tuple[int, int] = (SCREEN_SIZE[0] // PIXEL_SIZE, SCREEN_SIZE[1] // PIXEL_SIZE)
+        self.GRID_SIZE: tuple[int, int] = (SCREEN_SIZE[0] // self.PIXEL_SIZE, SCREEN_SIZE[1] // self.PIXEL_SIZE)
         self.grid: list[list[int]] = [[self.elements["air"] for _ in range(self.GRID_SIZE[0])] for _ in range(self.GRID_SIZE[1])]     # [y][x]
+    
+    # given the screen coordinates, it returns the grid coordinates
+    def toGridCoords(self, coords: tuple[int, int]) -> tuple[int, int]:
+        return (coords[0] // self.PIXEL_SIZE, coords[1] // self.PIXEL_SIZE)
+    
+    # given the greed coordinates, it returns the screen coordinates
+    def toScreenCoords(self, coords: tuple[int, int]) -> tuple[int, int]:
+        return (coords[0] * self.PIXEL_SIZE, coords[1] * self.PIXEL_SIZE)
     
     def updateGrid(self) -> None:
         grid = self.grid    # just for readability
