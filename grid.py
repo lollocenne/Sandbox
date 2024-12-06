@@ -28,6 +28,14 @@ class Grid:
     def toScreenCoords(self, coords: tuple[int, int]) -> tuple[int, int]:
         return (coords[0] * self.PIXEL_SIZE, coords[1] * self.PIXEL_SIZE)
     
+    # given the screen coordinates return the cell in the grid
+    def getCellFromScreen(self, coords: tuple[int, int]) -> int:
+        return self.getCellFromGrid(self.toGridCoords(coords))
+    
+    # given the coordinates return the cell in the grid
+    def getCellFromGrid(self, coords: tuple[int, int]) -> int:
+        return self.grid[coords[1]][coords[0]]
+    
     def updateGrid(self) -> None:
         grid = self.grid    # just for readability
         
