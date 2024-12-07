@@ -19,9 +19,6 @@ class Grid:
         
         self.GRID_SIZE: tuple[int, int] = (SCREEN_SIZE[0] // self.PIXEL_SIZE, SCREEN_SIZE[1] // self.PIXEL_SIZE)
         self.grid: list[list[int]] = [[self.elements["air"] for _ in range(self.GRID_SIZE[0])] for _ in range(self.GRID_SIZE[1])]     # [y][x]
-        self.grid[0][0] = 1
-        self.grid[0][1] = 2
-        self.grid[5][2] = 0
     
     # Given the screen coordinates, it returns the grid coordinates
     def toGridCoords(self, coords: tuple[int, int]) -> tuple[int, int]:

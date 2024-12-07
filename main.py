@@ -1,13 +1,15 @@
 import sys
 import pygame
+from pygame._sdl2 import Window
 from grid import Grid
 
 
 def main():
     pygame.init()
-    screenSize = (600, 300)
-    screen = pygame.display.set_mode(screenSize)
-    grid = Grid(screenSize)
+    pygame.display.set_caption("Sendbox")
+    screen = pygame.display.set_mode((600, 400), pygame.RESIZABLE)
+    Window.from_display_module().maximize()
+    grid = Grid(screen.get_size())
     clock = pygame.time.Clock()
     
     colors = {
