@@ -10,15 +10,18 @@ THIS ORDER IS IMPORTANT: the top one can replace the one below
 """
 
 class Grid:
-    def __init__(self):
+    def __init__(self, screenSize: tuple[int, int]):
         LIST_ELEMENTS: tuple[str] = ("stone", "sand", "waterLeft", "waterRight", "air")
         self.elements: dict[str, int] = {LIST_ELEMENTS[num] : num for num in range(len(LIST_ELEMENTS))}
         
         self.PIXEL_SIZE: int = 10
-        SCREEN_SIZE: tuple[int, int] = (60, 30)   # Replace with the screen size
+        SCREEN_SIZE: tuple[int, int] = (screenSize[0], screenSize[1])
         
         self.GRID_SIZE: tuple[int, int] = (SCREEN_SIZE[0] // self.PIXEL_SIZE, SCREEN_SIZE[1] // self.PIXEL_SIZE)
         self.grid: list[list[int]] = [[self.elements["air"] for _ in range(self.GRID_SIZE[0])] for _ in range(self.GRID_SIZE[1])]     # [y][x]
+        self.grid[0][0] = 1
+        self.grid[0][1] = 2
+        self.grid[5][2] = 0
     
     # Given the screen coordinates, it returns the grid coordinates
     def toGridCoords(self, coords: tuple[int, int]) -> tuple[int, int]:
@@ -82,7 +85,7 @@ class Grid:
 if __name__ == "__main__":
     import time
     
-    grid = Grid()
+    grid = Grid((60, 30))
     print(grid)
     while True:
         time.sleep(0.5)
