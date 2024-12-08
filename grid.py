@@ -36,16 +36,6 @@ class Grid:
     def getCellFromGrid(self, coords: tuple[int, int]) -> int:
         return self.grid[coords[1]][coords[0]]
     
-    # Create the brush
-    # A brush is a grid [y][x]
-    @staticmethod
-    def createBrush(size: int, cell: int) -> list[list[int]]:
-        """
-        size: length, height of the brush, must be odd.
-        cell: value for each cell
-        """
-        return [[cell for _ in range(size)] for _ in range(size)]
-    
     # Add the cells to the grid using the brush
     def addCells(self, center: tuple[int, int], size: tuple[int, int], cell: int) -> None:
         """
@@ -53,13 +43,12 @@ class Grid:
         size: length, height of the brush
         cell: value for each cell
         """
-        brush = self.createBrush(size, cell)
         center = self.toGridCoords(center)
         for y in range(-size // 2, size // 2):
             if y + center[1] < 0 or y + center[1] >= self.GRID_SIZE[1]: continue
             for x in range(-size // 2, size // 2):
                 if x + center[0] < 0 or x + center[0] >= self.GRID_SIZE[0]: continue
-                self.grid[y + center[1]][x + center[0]] = brush[y][x]
+                self.grid[y + center[1]][x + center[0]] = cell
     
     # Physics
     def updateGrid(self) -> None:
