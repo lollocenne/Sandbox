@@ -12,7 +12,7 @@ def main():
     grid = Grid(screen.get_size())
     clock = pygame.time.Clock()
     
-    colors = {
+    colors: dict[int: tuple[int, int, int]] = {
         grid.elements["stone"]: (128, 128, 128),
         grid.elements["sand"]: (194, 178, 128),
         grid.elements["waterLeft"]: (0, 0, 255),
@@ -20,7 +20,7 @@ def main():
         grid.elements["air"]: (0, 0, 0),
     }
     
-    def drawGrid():
+    def drawGrid() -> None:
         for y in range(grid.GRID_SIZE[1]):
             for x in range(grid.GRID_SIZE[0]):
                 cell = grid.grid[y][x]
@@ -29,14 +29,23 @@ def main():
                 rect = pygame.Rect(screenX, screenY, grid.PIXEL_SIZE, grid.PIXEL_SIZE)
                 pygame.draw.rect(screen, color, rect)
 
-    def getColor(cell):
+    def getColor(cell: int) -> tuple[int, int, int]:
         return colors[cell]
     
     running = True
+    mousePressed = False
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                mousePressed = True
+            elif event.type == pygame.MOUSEBUTTONUP:
+                mousePressed = False
+        
+        if mousePressed:
+            touchX, touchY = pygame.mouse.get_pos()
+            grid.addCells((touchX, touchY), 5, 1)
         
         grid.updateGrid()
         screen.fill((0, 0, 0))
