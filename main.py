@@ -23,17 +23,26 @@ def main():
     def drawGrid() -> None:
         for y in range(grid.GRID_SIZE[1]):
             for x in range(grid.GRID_SIZE[0]):
-                cell = grid.grid[y][x]
+                cell: int = grid.grid[y][x]
                 color = getColor(cell)
                 screenX, screenY = grid.toScreenCoords((x, y))
                 rect = pygame.Rect(screenX, screenY, grid.PIXEL_SIZE, grid.PIXEL_SIZE)
                 pygame.draw.rect(screen, color, rect)
-
+    
+    def drawMouseSquare(x, y) -> None:
+        length = size * grid.PIXEL_SIZE
+        x, y = grid.toGridCoords((x, y))
+        x -= size // 2
+        y -= size // 2
+        x, y = grid.toScreenCoords((x, y))
+        pygame.draw.rect(screen, (255, 255, 255), (x, y, length, length), width = 1)
+    
     def getColor(cell: int) -> tuple[int, int, int]:
         return colors[cell]
     
-    running = True
-    mousePressed = False
+    running: bool = True
+    mousePressed: bool = False
+    size: int = 5
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -43,13 +52,15 @@ def main():
             elif event.type == pygame.MOUSEBUTTONUP:
                 mousePressed = False
         
+        mouseX, mouseY = pygame.mouse.get_pos()
         if mousePressed:
-            touchX, touchY = pygame.mouse.get_pos()
-            grid.addCells((touchX, touchY), 5, 1)
+            touchX, touchY = mouseX, mouseY
+            grid.addCells((touchX, touchY), size, 2)
         
         grid.updateGrid()
         screen.fill((0, 0, 0))
         drawGrid()
+        drawMouseSquare(mouseX, mouseY)
         pygame.display.flip()
         clock.tick(30)
     

@@ -9,6 +9,9 @@ Cells values:
 THIS ORDER IS IMPORTANT: the top one can replace the one below
 """
 
+from random import choice
+
+
 class Grid:
     def __init__(self, screenSize: tuple[int, int]):
         LIST_ELEMENTS: tuple[str] = ("stone", "sand", "waterLeft", "waterRight", "air")
@@ -28,14 +31,6 @@ class Grid:
     def toScreenCoords(self, coords: tuple[int, int]) -> tuple[int, int]:
         return (coords[0] * self.PIXEL_SIZE, coords[1] * self.PIXEL_SIZE)
     
-    # Given the screen coordinates return the cell in the grid
-    def getCellFromScreen(self, coords: tuple[int, int]) -> int:
-        return self.getCellFromGrid(self.toGridCoords(coords))
-    
-    # Given the coordinates return the cell in the grid
-    def getCellFromGrid(self, coords: tuple[int, int]) -> int:
-        return self.grid[coords[1]][coords[0]]
-    
     # Add the cells to the grid using the brush
     def addCells(self, center: tuple[int, int], size: tuple[int, int], cell: int) -> None:
         """
@@ -44,21 +39,21 @@ class Grid:
         cell: value for each cell
         """
         center = self.toGridCoords(center)
-        for y in range(-size // 2, size // 2):
+        for y in range(-size // 2 + 1, size // 2 + 1):
             if y + center[1] < 0 or y + center[1] >= self.GRID_SIZE[1]: continue
-            for x in range(-size // 2, size // 2):
+            for x in range(-size // 2 + 1, size // 2 + 1):
                 if x + center[0] < 0 or x + center[0] >= self.GRID_SIZE[0]: continue
                 self.grid[y + center[1]][x + center[0]] = cell
     
     # Physics
     def updateGrid(self) -> None:
         grid = self.grid    # Just for readability
+        canUpdate: bool = True    # False if it needs to skip some updates
         
         for y in range(self.GRID_SIZE[1] - 1, -1, -1):
-            for x in range(self.GRID_SIZE[0]):
-                # Reset the -1 to a waterRight
-                if grid[y][x] == -1:
-                    grid[y][x] = self.elements["waterRight"]
+            for x in choice([range(self.GRID_SIZE[0]), range(self.GRID_SIZE[0] - 1, -1, -1)]):
+                if not canUpdate:
+                    canUpdate = True
                     continue
                 if grid[y][x] == self.elements["air"] or grid[y][x] == self.elements["stone"]: continue     # Air and stone does not move
                 # Check if it can go down, down-left or down-right
@@ -76,13 +71,15 @@ class Grid:
                         grid[y][x] = self.elements["waterRight"]
                     else:
                         grid[y][x], grid[y][x-1] = grid[y][x-1], grid[y][x]
+                        canUpdate = False   # It should not get updated
                         continue
                 
                 if grid[y][x] == self.elements["waterRight"]:
                     if x == self.GRID_SIZE[0] - 1 or grid[y][x] >= grid[y][x+1]:
                         grid[y][x] = self.elements["waterLeft"]
                     else:
-                        grid[y][x], grid[y][x+1] = grid[y][x+1], -1     # Set it to -1 to avoid moving it
+                        grid[y][x], grid[y][x+1] = grid[y][x+1], grid[y][x]
+                        canUpdate = False   # It should not get updated
     
     def __str__(self):
         grid = ""
