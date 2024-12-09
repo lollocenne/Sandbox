@@ -51,6 +51,11 @@ def main():
                 mousePressed = True
             elif event.type == pygame.MOUSEBUTTONUP:
                 mousePressed = False
+            elif event.type == pygame.MOUSEWHEEL:
+                if event.y > 0:
+                    size += 2
+                elif event.y < 0 and size > 1:
+                    size -= 2
         
         mouseX, mouseY = pygame.mouse.get_pos()
         if mousePressed:
