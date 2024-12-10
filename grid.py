@@ -60,6 +60,7 @@ class Grid:
                 if y != self.GRID_SIZE[1] - 1:
                     for d in (0,) + choice([(-1, 1), (1, -1)]):
                         if x + d == self.GRID_SIZE[0] or x + d == -1: continue
+                        if grid[y][x] == self.elements["waterLeft"] and grid[y+1][x+d]  == self.elements["waterRight"]: continue     # Water left and water right should not swap
                         if grid[y][x] < grid[y+1][x+d]:
                             grid[y][x], grid[y+1][x+d] = grid[y+1][x+d], grid[y][x]
                             break
