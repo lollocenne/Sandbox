@@ -3,7 +3,7 @@ Cells values:
     0: stone
     1: sand
     2: water left
-    3: water right
+    2.4: water right
     4: air
 
 THIS ORDER IS IMPORTANT: the top one can replace the one below
@@ -15,7 +15,11 @@ from random import choice
 class Grid:
     def __init__(self, screenSize: tuple[int, int]):
         LIST_ELEMENTS: tuple[str] = ("stone", "sand", "waterLeft", "waterRight", "air")
-        self.elements: dict[str, int] = {LIST_ELEMENTS[num] : num for num in range(len(LIST_ELEMENTS))}
+        DOUBLES = ("waterRight")    # Contains duplicated elements
+        self.elements: dict[str, int | float] = {
+            LIST_ELEMENTS[num]: (num - 0.6 if LIST_ELEMENTS[num] in DOUBLES else num)
+            for num in range(len(LIST_ELEMENTS))
+        }
         
         self.PIXEL_SIZE: int = 10
         SCREEN_SIZE: tuple[int, int] = (screenSize[0], screenSize[1])
@@ -60,15 +64,14 @@ class Grid:
                 if y != self.GRID_SIZE[1] - 1:
                     for d in (0,) + choice([(-1, 1), (1, -1)]):
                         if x + d == self.GRID_SIZE[0] or x + d == -1: continue
-                        if grid[y][x] == self.elements["waterLeft"] and grid[y+1][x+d]  == self.elements["waterRight"]: continue     # Water left and water right should not swap
-                        if grid[y][x] < grid[y+1][x+d]:
+                        if round(grid[y][x]) < round(grid[y+1][x+d]):
                             grid[y][x], grid[y+1][x+d] = grid[y+1][x+d], grid[y][x]
                             break
                 
                 # Water will move left and right untill it find somewhere to fall
                 # Check if water can go left, if not, it will try to go right
                 if grid[y][x] == self.elements["waterLeft"]:
-                    if x == 0 or grid[y][x] >= grid[y][x-1]:
+                    if x == 0 or round(grid[y][x]) >= round(grid[y][x-1]):
                         grid[y][x] = self.elements["waterRight"]
                     else:
                         grid[y][x], grid[y][x-1] = grid[y][x-1], grid[y][x]
@@ -76,7 +79,7 @@ class Grid:
                         continue
                 
                 if grid[y][x] == self.elements["waterRight"]:
-                    if x == self.GRID_SIZE[0] - 1 or grid[y][x] >= grid[y][x+1]:
+                    if x == self.GRID_SIZE[0] - 1 or round(grid[y][x]) >= round(grid[y][x+1]):
                         grid[y][x] = self.elements["waterLeft"]
                     else:
                         grid[y][x], grid[y][x+1] = grid[y][x+1], grid[y][x]
