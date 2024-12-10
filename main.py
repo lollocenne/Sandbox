@@ -20,6 +20,9 @@ def main():
         grid.elements["air"]: (0, 0, 0),
     }
     
+    def getColor(cell: int) -> tuple[int, int, int]:
+        return colors[cell]
+    
     def drawGrid() -> None:
         for y in range(grid.GRID_SIZE[1]):
             for x in range(grid.GRID_SIZE[0]):
@@ -37,9 +40,6 @@ def main():
         x, y = grid.toScreenCoords((x, y))
         pygame.draw.rect(screen, (255, 255, 255), (x, y, length, length), width = 1)
     
-    def getColor(cell: int) -> tuple[int, int, int]:
-        return colors[cell]
-    
     running: bool = True
     mousePressed: bool = False
     size: int = 5
@@ -52,7 +52,7 @@ def main():
             elif event.type == pygame.MOUSEBUTTONUP:
                 mousePressed = False
             elif event.type == pygame.MOUSEWHEEL:
-                if event.y > 0:
+                if event.y > 0 and size < max(grid.GRID_SIZE) + 1:
                     size += 2
                 elif event.y < 0 and size > 1:
                     size -= 2
