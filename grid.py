@@ -64,16 +64,17 @@ class Grid:
                             grid[y][x], grid[y+1][x+d] = grid[y+1][x+d], grid[y][x]
                             break
                 
-                # Check where water can go and choose randomly where to go
+                # Check where water can go and chooses randomly where to go
                 if grid[y][x] == self.elements["water"]:
-                    if (x + 1 == self.GRID_SIZE[0] or grid[y][x + 1] < grid[y][x]) and grid[y][x] < grid[y][x - 1]:
+                    if (x + 1 == self.GRID_SIZE[0] or grid[y][x + 1] < grid[y][x]) and grid[y][x] < grid[y][x - 1]:     # Check if it is forced to go left
                         grid[y][x], grid[y][x - 1] = grid[y][x - 1], grid[y][x]
-                        continue
-                    if (x - 1 == -1 or grid[y][x - 1] < grid[y][x]) and grid[y][x] < grid[y][x + 1]:
+                    elif (x - 1 == -1 or grid[y][x - 1] < grid[y][x]) and grid[y][x] < grid[y][x + 1]:     # Check if it is forced to go right
                         grid[y][x], grid[y][x + 1] = grid[y][x + 1], grid[y][x]
-                        continue
-                    move = choice([-1, 1])
-                    grid[y][x], grid[y][x + move] = grid[y][x + move], grid[y][x]
+                    else:
+                        if x + 1 == self.GRID_SIZE[0] or x - 1 == -1: continue
+                        # Randomly chooses between left and right
+                        move = choice([-1, 1])
+                        grid[y][x], grid[y][x + move] = grid[y][x + move], grid[y][x]
     
     def __str__(self):
         grid = ""
