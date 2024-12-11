@@ -48,10 +48,13 @@ class Grid:
     # Physics
     def updateGrid(self) -> None:
         grid = self.grid    # Just for readability
-        canUpdate: bool = True    # False if it needs to skip some updates
+        canUpdate: bool = True    # False if it needs to skip some updates (usuali water set it to False)
         
+        updateToRight: bool = True    # True if the rows are updated from left to right, it switch for each row
         for y in range(self.GRID_SIZE[1] - 1, -1, -1):
-            for x in choice([range(self.GRID_SIZE[0]), range(self.GRID_SIZE[0] - 1, -1, -1)]):
+            updateToRight = not updateToRight   # Switch the update direction
+            row = range(self.GRID_SIZE[0]) if updateToRight else range(self.GRID_SIZE[0] - 1, -1, -1)
+            for x in row:
                 if not canUpdate:
                     canUpdate = True
                     continue
@@ -68,13 +71,19 @@ class Grid:
                 if grid[y][x] == self.elements["water"]:
                     if (x + 1 == self.GRID_SIZE[0] or grid[y][x + 1] < grid[y][x]) and grid[y][x] < grid[y][x - 1]:     # Check if it is forced to go left
                         grid[y][x], grid[y][x - 1] = grid[y][x - 1], grid[y][x]
+                        if not updateToRight: canUpdate = False
                     elif (x - 1 == -1 or grid[y][x - 1] < grid[y][x]) and grid[y][x] < grid[y][x + 1]:     # Check if it is forced to go right
                         grid[y][x], grid[y][x + 1] = grid[y][x + 1], grid[y][x]
+                        if updateToRight: canUpdate = False
                     else:
                         if x + 1 == self.GRID_SIZE[0] or x - 1 == -1: continue
                         # Randomly chooses between left and right
                         move = choice([-1, 1])
                         grid[y][x], grid[y][x + move] = grid[y][x + move], grid[y][x]
+                        if move == 1:
+                            if updateToRight: canUpdate = False
+                        else:
+                            if not updateToRight: canUpdate = False
     
     def __str__(self):
         grid = ""
