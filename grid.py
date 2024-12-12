@@ -14,13 +14,11 @@ from random import choice
 class Grid:
     def __init__(self, screenSize: tuple[int, int]):
         LIST_ELEMENTS: tuple[str] = ("stone", "sand", "water", "air")
-        DOUBLES = ("waterRight")    # Contains duplicated elements
         self.elements: dict[str, int] = {LIST_ELEMENTS[num] : num for num in range(len(LIST_ELEMENTS))}
         
         self.PIXEL_SIZE: int = 10
-        SCREEN_SIZE: tuple[int, int] = (screenSize[0], screenSize[1])
         
-        self.GRID_SIZE: tuple[int, int] = (SCREEN_SIZE[0] // self.PIXEL_SIZE, SCREEN_SIZE[1] // self.PIXEL_SIZE)
+        self.GRID_SIZE: tuple[int, int] = self.toGridCoords(screenSize)
         self.grid: list[list[int]] = [[self.elements["air"] for _ in range(self.GRID_SIZE[0])] for _ in range(self.GRID_SIZE[1])]     # [y][x]
     
     # Given the screen coordinates, it returns the grid coordinates

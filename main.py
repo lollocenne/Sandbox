@@ -9,7 +9,9 @@ def main():
     pygame.display.set_caption("Sendbox")
     screen = pygame.display.set_mode((600, 400), pygame.RESIZABLE)
     Window.from_display_module().maximize()
-    grid = Grid(screen.get_size())
+    screenLength, screenHeight = screen.get_size()
+    buttonsAreaSize = (300, screenHeight)
+    grid = Grid((screenLength - buttonsAreaSize[0], screenHeight))
     clock = pygame.time.Clock()
     
     colors: dict[int: tuple[int, int, int]] = {
@@ -42,6 +44,7 @@ def main():
     running: bool = True
     mousePressed: bool = False
     size: int = 5
+    element: int = grid.elements["water"]
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -59,10 +62,10 @@ def main():
         mouseX, mouseY = pygame.mouse.get_pos()
         if mousePressed:
             touchX, touchY = mouseX, mouseY
-            grid.addCells((touchX, touchY), size, 2)
+            grid.addCells((touchX, touchY), size, element)
         
         grid.updateGrid()
-        screen.fill((0, 0, 0))
+        screen.fill((20, 20, 25))
         drawGrid()
         drawMouseSquare(mouseX, mouseY)
         pygame.display.flip()
