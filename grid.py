@@ -13,8 +13,8 @@ from random import choice
 
 class Grid:
     def __init__(self, screenSize: tuple[int, int]):
-        LIST_ELEMENTS: tuple[str] = ("stone", "sand", "water", "air")
-        self.elements: dict[str, int] = {LIST_ELEMENTS[num] : num for num in range(len(LIST_ELEMENTS))}
+        self.LIST_ELEMENTS: tuple[str] = ("stone", "sand", "water", "air")
+        self.elements: dict[str, int] = {self.LIST_ELEMENTS[num] : num for num in range(len(self.LIST_ELEMENTS))}
         
         self.PIXEL_SIZE: int = 10
         
