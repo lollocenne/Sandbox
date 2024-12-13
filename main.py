@@ -39,6 +39,7 @@ def main():
         pygame.draw.rect(screen, (255, 255, 255), (x, y, length, length), width = 1)
     
     def drawButtonsArea():
+        nonlocal element
         buttons = grid.LIST_ELEMENTS
         font = pygame.font.Font(size = 30)
         buttonHeight, gap = 50, 70
@@ -50,12 +51,13 @@ def main():
             buttonY = startY + i * (buttonHeight + gap)
             buttonRect = pygame.Rect(buttonX, buttonY, 200, buttonHeight)
             pygame.draw.rect(screen, colors[grid.elements[text]], buttonRect)
+            if element == grid.elements[text.lower()]:
+                pygame.draw.rect(screen, (255, 255, 255), buttonRect, width=3)
             textSurface = font.render(text.upper(), True, (255, 255, 255))
             textRect = textSurface.get_rect(center=buttonRect.center)
             screen.blit(textSurface, textRect)
             
             if buttonRect.collidepoint(pygame.mouse.get_pos()) and pygame.mouse.get_pressed()[0]:
-                nonlocal element
                 element = grid.elements[text.lower()]
     
     running: bool = True
