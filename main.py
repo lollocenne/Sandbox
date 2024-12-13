@@ -38,7 +38,7 @@ def main():
         x, y = grid.toScreenCoords((x, y))
         pygame.draw.rect(screen, (255, 255, 255), (x, y, length, length), width = 1)
     
-    def drawButtonsArea():
+    def drawButtonsArea(mouseCoords: tuple[int, int]):
         nonlocal element
         buttons = grid.LIST_ELEMENTS
         font = pygame.font.Font(size = 30)
@@ -57,7 +57,7 @@ def main():
             textRect = textSurface.get_rect(center=buttonRect.center)
             screen.blit(textSurface, textRect)
             
-            if buttonRect.collidepoint(pygame.mouse.get_pos()) and pygame.mouse.get_pressed()[0]:
+            if buttonRect.collidepoint(mouseCoords) and pygame.mouse.get_pressed()[0]:
                 element = grid.elements[text.lower()]
     
     running: bool = True
@@ -80,14 +80,13 @@ def main():
         
         mouseX, mouseY = pygame.mouse.get_pos()
         if mousePressed:
-            touchX, touchY = mouseX, mouseY
-            grid.addCells((touchX, touchY), size, element)
+            grid.addCells((mouseX, mouseY), size, element)
         
         grid.updateGrid()
         screen.fill((30, 30, 35))
         drawGrid()
         drawMouseSquare(mouseX, mouseY)
-        drawButtonsArea()
+        drawButtonsArea((mouseX, mouseY))
         pygame.display.flip()
         clock.tick(30)
     
