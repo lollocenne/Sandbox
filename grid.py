@@ -38,9 +38,11 @@ class Grid:
         """
         center = self.toGridCoords(center)
         for y in range(-size // 2 + 1, size // 2 + 1):
-            if y + center[1] < 0 or y + center[1] >= self.GRID_SIZE[1]: continue
+            if y + center[1] < 0: continue
+            if y + center[1] >= self.GRID_SIZE[1]: return
             for x in range(-size // 2 + 1, size // 2 + 1):
-                if x + center[0] < 0 or x + center[0] >= self.GRID_SIZE[0]: continue
+                if x + center[0] < 0: continue
+                if x + center[0] >= self.GRID_SIZE[0]: break
                 self.grid[y + center[1]][x + center[0]] = cell
     
     # Physics
