@@ -16,7 +16,11 @@ class Grid:
         self.LIST_ELEMENTS: tuple[str] = ("stone", "sand", "water", "air")
         self.elements: dict[str, int] = {self.LIST_ELEMENTS[num] : num for num in range(len(self.LIST_ELEMENTS))}
         
-        self.PIXEL_SIZE: int = 10
+        # Get the smallest pixel size for the screen starting from a min size
+        def getMinSize(min, num):
+            while num % min != 0: min += 1
+            return min
+        self.PIXEL_SIZE: int = getMinSize(10, screenSize[1])
         
         self.GRID_SIZE: tuple[int, int] = self.toGridCoords(screenSize)
         self.grid: list[list[int]] = [[self.elements["air"] for _ in range(self.GRID_SIZE[0])] for _ in range(self.GRID_SIZE[1])]     # [y][x]

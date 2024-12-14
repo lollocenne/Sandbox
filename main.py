@@ -12,7 +12,8 @@ def main():
     Window.from_display_module().maximize()
     screenLength, screenHeight = screen.get_size()
     buttonsAreaSize = (300, screenHeight)
-    grid = Grid((screenLength - buttonsAreaSize[0], screenHeight))
+    buttonsAreaX, buttonsAreaY = screenLength - buttonsAreaSize[0], 0
+    grid = Grid((buttonsAreaX, screenHeight))
     clock = pygame.time.Clock()
     
     colors: dict[int, tuple[int, int, int]] = {
@@ -35,8 +36,7 @@ def main():
                 cell: int = grid.grid[y][x]
                 color = getColor(cell, x, y)
                 screenX, screenY = grid.toScreenCoords((x, y))
-                rect = pygame.Rect(screenX, screenY, grid.PIXEL_SIZE, grid.PIXEL_SIZE)
-                pygame.draw.rect(screen, color, rect)
+                pygame.draw.rect(screen, color, pygame.Rect(screenX, screenY, grid.PIXEL_SIZE, grid.PIXEL_SIZE))
     
     def drawMouseSquare(x, y) -> None:
         length = size * grid.PIXEL_SIZE
@@ -47,6 +47,7 @@ def main():
         pygame.draw.rect(screen, (255, 255, 255), (x, y, length, length), width = 1)
     
     def drawButtonsArea(mouseCoords: tuple[int, int]):
+        pygame.draw.rect(screen, (30, 30, 35), pygame.Rect(buttonsAreaX-1, buttonsAreaY, buttonsAreaSize[0], buttonsAreaSize[1]))
         nonlocal element
         buttons = grid.LIST_ELEMENTS
         font = pygame.font.Font(size = 30)
@@ -87,11 +88,10 @@ def main():
                     size -= 2
         
         mouseX, mouseY = pygame.mouse.get_pos()
-        if mousePressed:
+        if mousePressed and mouseX < screenLength - buttonsAreaSize[0]:
             grid.addCells((mouseX, mouseY), size, element)
         
         grid.updateGrid()
-        screen.fill((30, 30, 35))
         drawGrid()
         drawMouseSquare(mouseX, mouseY)
         drawButtonsArea((mouseX, mouseY))
