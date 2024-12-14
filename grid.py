@@ -51,6 +51,7 @@ class Grid:
         updateToRight: bool = True    # True if the rows are updated from left to right, it switch for each row
         for y in range(self.GRID_SIZE[1] - 1, -1, -1):
             updateToRight = not updateToRight   # Switch the update direction
+            canUpdate = True
             row = range(self.GRID_SIZE[0]) if updateToRight else range(self.GRID_SIZE[0] - 1, -1, -1)
             for x in row:
                 if not canUpdate:
@@ -67,21 +68,24 @@ class Grid:
                 
                 # Check where water can go and chooses randomly where to go
                 if grid[y][x] == self.elements["water"]:
-                    if (x + 1 == self.GRID_SIZE[0] or grid[y][x + 1] < grid[y][x]) and grid[y][x] < grid[y][x - 1]:     # Check if it is forced to go left
-                        grid[y][x], grid[y][x - 1] = grid[y][x - 1], grid[y][x]
-                        if not updateToRight: canUpdate = False
-                    elif (x - 1 == -1 or grid[y][x - 1] < grid[y][x]) and grid[y][x] < grid[y][x + 1]:     # Check if it is forced to go right
-                        grid[y][x], grid[y][x + 1] = grid[y][x + 1], grid[y][x]
-                        if updateToRight: canUpdate = False
+                    possibleMoves = [-1, 1]
+                    if x + 1 == self.GRID_SIZE[0] or grid[y][x] >= grid[y][x + 1]:  # Check if it can go right
+                        possibleMoves.pop()
+                    if x == 0 or grid[y][x] >= grid[y][x - 1]:  # Check if it can go left
+                        possibleMoves.pop(0)
+                    
+                    # Randomly choose a direction
+                    if possibleMoves:
+                        move = choice(possibleMoves)
                     else:
-                        if x + 1 == self.GRID_SIZE[0] or x - 1 == -1: continue
-                        # Randomly chooses between left and right
-                        move = choice([-1, 1])
-                        grid[y][x], grid[y][x + move] = grid[y][x + move], grid[y][x]
-                        if move == 1:
-                            if updateToRight: canUpdate = False
-                        else:
-                            if not updateToRight: canUpdate = False
+                        continue
+                    
+                    # Move and avoid getting updated angain
+                    grid[y][x], grid[y][x + move] = grid[y][x + move], grid[y][x]
+                    if move == 1:
+                        if updateToRight: canUpdate = False
+                    elif move == -1:
+                        if not updateToRight: canUpdate = False
     
     def __str__(self):
         grid = ""
