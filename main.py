@@ -1,5 +1,6 @@
 import sys
 import pygame
+import random
 from pygame._sdl2 import Window
 from grid import Grid
 
@@ -21,11 +22,18 @@ def main():
         grid.elements["air"]: (0, 0, 0),
     }
     
+    # Colors based on the position
+    def clamp(values, minVal, maxVal) -> list:  return [max(minVal, min(val, maxVal)) for val in values]
+    def getColor(cell: int, x: int, y: int) -> tuple[int, int, int]:
+        change = hash((x, y, y*2, x/(y + 1))) % 21 - 10
+        R, G, B = colors[cell]
+        return clamp((R + change, G + change, B + change), 0, 255)
+    
     def drawGrid() -> None:
         for y in range(grid.GRID_SIZE[1]):
             for x in range(grid.GRID_SIZE[0]):
                 cell: int = grid.grid[y][x]
-                color = colors[cell]
+                color = getColor(cell, x, y)
                 screenX, screenY = grid.toScreenCoords((x, y))
                 rect = pygame.Rect(screenX, screenY, grid.PIXEL_SIZE, grid.PIXEL_SIZE)
                 pygame.draw.rect(screen, color, rect)
