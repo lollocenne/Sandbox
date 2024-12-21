@@ -20,7 +20,7 @@ def main():
         grid.elements["stone"]: (128, 128, 128),
         grid.elements["sand"]: (194, 178, 128),
         grid.elements["water"]: (0, 0, 255),
-        grid.elements["air"]: (0, 0, 0),
+        grid.elements["air"]: (0, 0, 0)
     }
     
     # Colors based on the position
